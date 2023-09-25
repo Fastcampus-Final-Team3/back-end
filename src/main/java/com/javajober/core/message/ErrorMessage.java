@@ -7,7 +7,6 @@ public enum ErrorMessage {
 
 	MEMBER_NOT_FOUND("존재하지 않는 회원 정보입니다."),
 	ADD_SPACE_NOT_FOUND("존재하지 않는 스페이스 입니다."),
-	FCM_INITIALIZATION_FAILED("FCM 초기화에 실패했습니다.");
 
 	private final String message;
 
