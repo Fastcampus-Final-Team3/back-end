@@ -12,6 +12,8 @@ public interface TemplateBlockRepository extends Repository<TemplateBlock, Long>
 
 	TemplateBlock save(TemplateBlock templateBlock);
 
+	TemplateBlock delete(TemplateBlock templateBlock);
+
 	Optional<TemplateBlock> findById(Long id);
 
 	default TemplateBlock getById(final Long id){

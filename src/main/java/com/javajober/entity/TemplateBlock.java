@@ -49,4 +49,8 @@ public class TemplateBlock {
         this.templateTitle = templateTitle;
         this.templateDescription = templateDescription;
     }
+
+    public void setDeletedAt(){
+        this.deletedAt = LocalDateTime.now();
+    }
 }

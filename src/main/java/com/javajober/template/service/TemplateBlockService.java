@@ -6,7 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.javajober.addSpace.repository.AddSpaceRepository;
+import com.javajober.core.error.exception.Exception404;
+import com.javajober.core.message.ErrorMessage;
 import com.javajober.entity.MemberGroup;
 import com.javajober.entity.TemplateAuth;
 import com.javajober.entity.TemplateBlock;
@@ -14,10 +15,8 @@ import com.javajober.template.dto.TemplateBlockRequest;
 import com.javajober.template.dto.TemplateBlockRequests;
 import com.javajober.template.dto.TemplateBlockResponse;
 import com.javajober.template.repository.MemberGroupRepository;
-import com.javajober.template.repository.SpaceWallCategoryRepository;
 import com.javajober.template.repository.TemplateAuthRepository;
 import com.javajober.template.repository.TemplateBlockRepository;
-import com.javajober.template.repository.TemplateRepository;
 
 @Service
 public class TemplateBlockService {
@@ -33,7 +32,7 @@ public class TemplateBlockService {
 	}
 
 	@Transactional
-	public void save(final TemplateBlockRequests<TemplateBlockRequest> templateBlockRequests){
+	public void save(final TemplateBlockRequests<TemplateBlockRequest> templateBlockRequests) {
 
 		List<TemplateBlockRequest> subDataList = templateBlockRequests.getSubData();
 
@@ -60,6 +59,10 @@ public class TemplateBlockService {
 
 		List<TemplateAuth> templateAuths = templateAuthRepository.findByTemplateBlockId(templateBlockId);
 
+		if(templateAuths == null || templateAuths.isEmpty()){
+			throw new Exception404(ErrorMessage.TEMPLATE_AUTH_NOT_FOUND);
+		}
+
 		List<Long> hasAccessTemplateAuth = new ArrayList<>();
 		List<Long> hasDenyTemplateAuth = new ArrayList<>();
 
@@ -71,6 +74,29 @@ public class TemplateBlockService {
 			}
 		}
 		return TemplateBlockResponse.from(templateBlock, hasAccessTemplateAuth, hasDenyTemplateAuth);
+	}
+
+
+
+	@Transactional
+	public void deleteTemplateBlock(Long templateBlockId){
+
+		TemplateBlock templateBlock = templateBlockRepository.getById(templateBlockId);
+
+		templateBlock.setDeletedAt();
+
+		List<TemplateAuth> authIds = templateAuthRepository.findByTemplateBlock(templateBlock);
+
+		if(authIds == null || authIds.isEmpty()){
+			throw new Exception404(ErrorMessage.TEMPLATE_AUTH_NOT_FOUND);
+		}
+
+		for (TemplateAuth auth : authIds) {
+			templateAuthRepository.delete(auth);
+			auth.setDeletedAt();
+		}
+
+		templateBlockRepository.delete(templateBlock);
 	}
 
 }

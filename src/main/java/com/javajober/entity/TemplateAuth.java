@@ -51,4 +51,8 @@ public class TemplateAuth {
         this.hasAccess = hasAccess;
         this.templateBlock = templateBlock;
     }
+
+    public void setDeletedAt() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
