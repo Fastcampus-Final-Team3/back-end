@@ -30,7 +30,7 @@ import com.javajober.template.repository.TemplateBlockRepository;
 import com.javajober.template.repository.TemplateRepository;
 
 @Service
-public class TemplateBlockService {
+public class TemplateService {
 
 	private final MemberGroupRepository memberGroupRepository;
 	private final AddSpaceRepository addSpaceRepository;
@@ -39,7 +39,7 @@ public class TemplateBlockService {
 	private final TemplateRepository templateRepository;
 	private final TemplateBlockRepository templateBlockRepository;
 
-	public TemplateBlockService(MemberGroupRepository memberGroupRepository, AddSpaceRepository addSpaceRepository,
+	public TemplateService(MemberGroupRepository memberGroupRepository, AddSpaceRepository addSpaceRepository,
 		TemplateAuthRepository templateAuthRepository, SpaceWallCategoryRepository spaceWallCategoryRepository,
 		TemplateRepository templateRepository, TemplateBlockRepository templateBlockRepository) {
 		this.memberGroupRepository = memberGroupRepository;
@@ -50,46 +50,6 @@ public class TemplateBlockService {
 		this.templateBlockRepository = templateBlockRepository;
 	}
 
-	@Transactional
-	public void save(final TemplateBlockRequests<TemplateBlockRequest> templateBlockRequests){
-
-		List<TemplateBlockRequest> subDataList = templateBlockRequests.getSubData();
-
-		for (TemplateBlockRequest templateBlockRequest : subDataList) {
-
-			TemplateBlock templateBlock = TemplateBlockRequest.toEntity(templateBlockRequest);
-			templateBlockRepository.save(templateBlock);
-
-			List<Long> allAuthIds = templateBlockRequest.getAllAuthIds();
-
-			for (Long authId : allAuthIds) {
-				MemberGroup memberGroup = memberGroupRepository.getById(authId);
-				Boolean hasAccess = templateBlockRequest.getHasAccessTemplateAuth().contains(authId);
-				TemplateAuth templateAuth = new TemplateAuth(memberGroup, hasAccess, templateBlock);
-				templateAuthRepository.save(templateAuth);
-			}
-		}
-	}
-
-	@Transactional
-	public TemplateBlockResponse getTemplateBlock(Long templateBlockId){
-
-		TemplateBlock templateBlock = templateBlockRepository.getById(templateBlockId);
-
-		List<TemplateAuth> templateAuths = templateAuthRepository.findByTemplateBlockId(templateBlockId);
-
-		List<Long> hasAccessTemplateAuth = new ArrayList<>();
-		List<Long> hasDenyTemplateAuth = new ArrayList<>();
-
-		for (TemplateAuth auth : templateAuths) {
-			if (auth.getHasAccess()) {
-				hasAccessTemplateAuth.add(auth.getAuthMember().getId());
-			} else {
-				hasDenyTemplateAuth.add(auth.getAuthMember().getId());
-			}
-		}
-		return TemplateBlockResponse.from(templateBlock, hasAccessTemplateAuth, hasDenyTemplateAuth);
-	}
 
 	@Transactional
 	public MemberAuthResponse getTemplateAuthList(SpaceType spaceType, Long memberId) {
