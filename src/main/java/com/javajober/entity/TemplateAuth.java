@@ -20,7 +20,7 @@ public class TemplateAuth {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auth_member_id",  nullable = false)
+    @JoinColumn(name = "member_group_id",  nullable = false)
     private MemberGroup authMember;
 
     @Column(name = "has_access")
