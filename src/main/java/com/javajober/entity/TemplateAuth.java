@@ -26,6 +26,10 @@ public class TemplateAuth {
     @Column(name = "has_access")
     private Boolean hasAccess;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "template_block_id")
+    private TemplateBlock templateBlock;
+
     @CreatedDate
     @Column(name="created_at")
     private LocalDateTime createdAt;
@@ -42,8 +46,9 @@ public class TemplateAuth {
     }
 
     @Builder
-    public TemplateAuth(final MemberGroup authMember, final Boolean hasAccess) {
+    public TemplateAuth(final MemberGroup authMember, final Boolean hasAccess, final TemplateBlock templateBlock) {
         this.authMember = authMember;
         this.hasAccess = hasAccess;
+        this.templateBlock = templateBlock;
     }
 }
