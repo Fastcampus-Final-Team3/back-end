@@ -21,12 +21,11 @@ public class TemplateBlockRequest {
 	public TemplateBlockRequest(){
 	}
 
-	public static TemplateBlock toEntity(TemplateBlockRequest templateBlockRequest,TemplateAuth templateAuth){
+	public static TemplateBlock toEntity(TemplateBlockRequest templateBlockRequest){
 		return TemplateBlock.builder()
 			.templateUUID(templateBlockRequest.getTemplateUUID())
 			.templateTitle(templateBlockRequest.getTemplateTitle())
 			.templateDescription(templateBlockRequest.getTemplateDescription())
-			.templateAuth(templateAuth)
 			.build();
 	}
 	public List<Long> getAllAuthIds() {
