@@ -3,6 +3,7 @@ package com.javajober.template.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,16 +13,21 @@ import com.javajober.core.message.ErrorMessage;
 import com.javajober.entity.SpaceWallCategory;
 import com.javajober.entity.SpaceWallCategoryType;
 import com.javajober.entity.Template;
+import com.javajober.entity.TemplateBlock;
 import com.javajober.template.dto.MemberAuthResponse;
 import com.javajober.entity.AddSpace;
 import com.javajober.entity.Member;
 import com.javajober.entity.MemberGroup;
 import com.javajober.entity.SpaceType;
 import com.javajober.entity.TemplateAuth;
+import com.javajober.template.dto.TemplateBlockRequest;
+import com.javajober.template.dto.TemplateBlockRequests;
+import com.javajober.template.dto.TemplateBlockResponse;
 import com.javajober.template.dto.TemplateResponse;
 import com.javajober.template.repository.MemberGroupRepository;
 import com.javajober.template.repository.SpaceWallCategoryRepository;
 import com.javajober.template.repository.TemplateAuthRepository;
+import com.javajober.template.repository.TemplateBlockRepository;
 import com.javajober.template.repository.TemplateRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -35,6 +41,30 @@ public class TemplateBlockService {
 	private final TemplateAuthRepository templateAuthRepository;
 	private final SpaceWallCategoryRepository spaceWallCategoryRepository;
 	private final TemplateRepository templateRepository;
+	private final TemplateBlockRepository templateBlockRepository;
+
+
+	@Transactional
+	public void save(final TemplateBlockRequests<TemplateBlockRequest> templateBlockRequests){
+
+		List<TemplateBlockRequest> subDataList = templateBlockRequests.getSubData();
+
+		for (TemplateBlockRequest templateBlockRequest : subDataList) {
+			List<Long> allAuthIds = templateBlockRequest.getAllAuthIds();
+
+			for (Long authId : allAuthIds) {
+				MemberGroup memberGroup = memberGroupRepository.getById(authId);
+				Boolean hasAccess = templateBlockRequest.getHasAccessTemplateAuth().contains(authId);
+				TemplateAuth templateAuth = new TemplateAuth(memberGroup, hasAccess);
+				templateAuthRepository.save(templateAuth);
+
+				TemplateBlock templateBlock = TemplateBlockRequest.toEntity(templateBlockRequest, templateAuth);
+				templateBlockRepository.save(templateBlock);
+			}
+		}
+	}
+
+
 
 	@Transactional
 	public MemberAuthResponse getTemplateAuthList(SpaceType spaceType, Long memberId) {
