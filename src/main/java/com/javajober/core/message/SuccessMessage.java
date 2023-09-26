@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum SuccessMessage {
 
 	HOME_SUCCESS("홈 조회를 성공했습니다."),
+	CREATE_SUCCESS("저장이 완료되었습니다."),
 	SUCCESS_TEMPORARY_SAVE_QUERY("임시 저장 조회를 성공했습니다."),
 
 	TEMPLATE_AUTH_SUCCESS("권한설정을 위한 유저정보 조회를 성공했습니다."),
