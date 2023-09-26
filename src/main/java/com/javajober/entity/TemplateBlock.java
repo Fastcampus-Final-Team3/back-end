@@ -48,7 +48,8 @@ public class TemplateBlock {
     protected TemplateBlock() {}
 
     @Builder
-    public TemplateBlock(final String templateTitle, final String templateDescription, final TemplateAuth templateAuth) {
+    public TemplateBlock(final String templateUUID, final String templateTitle, final String templateDescription, final TemplateAuth templateAuth) {
+        this.templateUUID = templateUUID;
         this.templateTitle = templateTitle;
         this.templateDescription = templateDescription;
         this.templateAuth = templateAuth;
