@@ -30,10 +30,6 @@ public class TemplateBlock {
     @Column(name = "template_description",  nullable = false)
     private String templateDescription;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "template_auth_id",  nullable = false)
-    private TemplateAuth templateAuth;
-
     @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -48,10 +44,9 @@ public class TemplateBlock {
     protected TemplateBlock() {}
 
     @Builder
-    public TemplateBlock(final String templateUUID, final String templateTitle, final String templateDescription, final TemplateAuth templateAuth) {
+    public TemplateBlock(final String templateUUID, final String templateTitle, final String templateDescription) {
         this.templateUUID = templateUUID;
         this.templateTitle = templateTitle;
         this.templateDescription = templateDescription;
-        this.templateAuth = templateAuth;
     }
 }
