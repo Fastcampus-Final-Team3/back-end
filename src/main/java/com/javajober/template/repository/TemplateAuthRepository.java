@@ -12,10 +12,10 @@ import org.springframework.data.repository.Repository;
 
 
 public interface TemplateAuthRepository extends Repository<TemplateAuth, Long> {
-	Optional<TemplateAuth> findByAuthMemberId(Long authMemberId);
+	Optional<TemplateAuth> findByAuthMemberIdAndTemplateBlockId(Long authMemberId, Long templateBlockId);
 
-	default TemplateAuth getByAuthMemberId(final Long authMemberId){
-		return findByAuthMemberId(authMemberId)
+	default TemplateAuth getByAuthMemberIdAndTemplateBlockId(final Long authMemberId, final Long templateBlockId){
+		return findByAuthMemberIdAndTemplateBlockId(authMemberId, templateBlockId)
 			.orElseThrow(() -> new Exception404(ErrorMessage.TEMPLATE_AUTH_NOT_FOUND));
 	}
 

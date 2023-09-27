@@ -24,8 +24,8 @@ public class TemplateController {
 	private final TemplateService templateService;
 
 	@GetMapping("/auth")
-	public ResponseEntity<ApiUtils.ApiResponse<MemberAuthResponse>> getTemplateAuthList(@RequestParam SpaceType spaceType, @RequestParam Long memberId) {
-		MemberAuthResponse response = templateService.getTemplateAuthList(spaceType, memberId);
+	public ResponseEntity<ApiUtils.ApiResponse<MemberAuthResponse>> getTemplateAuthList(@RequestParam SpaceType spaceType, @RequestParam Long memberId, @RequestParam Long templateBlockId) {
+		MemberAuthResponse response = templateService.getTemplateAuthList(spaceType, memberId, templateBlockId);
 		return ResponseEntity.ok(ApiUtils.success(HttpStatus.OK, SuccessMessage.TEMPLATE_AUTH_SUCCESS, response));
 	}
 

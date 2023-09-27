@@ -19,9 +19,6 @@ import com.javajober.entity.Member;
 import com.javajober.entity.MemberGroup;
 import com.javajober.entity.SpaceType;
 import com.javajober.entity.TemplateAuth;
-import com.javajober.template.dto.TemplateBlockRequest;
-import com.javajober.template.dto.TemplateBlockRequests;
-import com.javajober.template.dto.TemplateBlockResponse;
 import com.javajober.template.dto.TemplateResponse;
 import com.javajober.template.repository.MemberGroupRepository;
 import com.javajober.template.repository.SpaceWallCategoryRepository;
@@ -52,11 +49,14 @@ public class TemplateService {
 
 
 	@Transactional
-	public MemberAuthResponse getTemplateAuthList(SpaceType spaceType, Long memberId) {
+	public MemberAuthResponse getTemplateAuthList(SpaceType spaceType, Long memberId, Long templateBlockID) {
+
 
 		AddSpace addSpace = addSpaceRepository.getBySpaceTypeAndId(spaceType, memberId);
 
 		List<MemberGroup> memberGroups = memberGroupRepository.getByAddSpaceId(addSpace.getId());
+
+		TemplateBlock templateBlock = templateBlockRepository.getById(templateBlockID);
 
 		List<MemberAuthResponse.MemberInfo> memberInfos = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public class TemplateService {
 				throw new Exception404(ErrorMessage.MEMBER_NOT_FOUND);
 			}
 
-			TemplateAuth templateAuth = templateAuthRepository.getByAuthMemberId(memberGroup.getId());
+			TemplateAuth templateAuth = templateAuthRepository.getByAuthMemberIdAndTemplateBlockId(memberGroup.getId(),templateBlock.getId());
 
 			MemberAuthResponse.MemberInfo memberInfo = MemberAuthResponse.MemberInfo.from(memberGroup, member,
 				templateAuth);
