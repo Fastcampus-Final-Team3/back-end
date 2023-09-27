@@ -1,7 +1,8 @@
-package com.javajober.entity;
+package com.javajober.fcm.domain;
 
 
 import com.javajober.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -11,25 +12,24 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
-@Table(name="add_space")
+@Table(name = "member_fcm_token")
 @EntityListeners(AuditingEntityListener.class)
 @Entity
-public class AddSpace {
+public class MemberFcmToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "space_title", nullable = false)
-    private String spaceTitle;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "space_type", nullable = false)
-    private SpaceType spaceType;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @Column(name = "fcm_token", nullable = false)
+    private String fcmToken;
+
+    @Column(name = "device_id", nullable = false)
+    private String deviceId;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -39,16 +39,18 @@ public class AddSpace {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    protected AddSpace() {
+    protected MemberFcmToken() {
 
     }
 
-    public AddSpace (final String spaceTitle, final SpaceType spaceType, Member member) {
-        this.spaceTitle = spaceTitle;
-        this.spaceType = spaceType;
+    @Builder
+    public MemberFcmToken(final Member member, final String fcmToken, final String deviceId) {
         this.member = member;
+        this.fcmToken = fcmToken;
+        this.deviceId = deviceId;
+    }
+
+    public void updateFcmToken(String newFcmToken) {
+        this.fcmToken = newFcmToken;
     }
 }
