@@ -46,11 +46,8 @@ public class SpaceService {
         List<SpaceWall> spaceWalls = spaceWallRepository.findSpaceWalls(memberId, addSpaceId);
 
         Long spaceWallId = null;
-        if (hasWall) {
-            SpaceWall spaceWall = spaceWallRepository.findByAddSpaceId(addSpaceId);
-            if (spaceWall != null) {
-                spaceWallId = spaceWall.getId();
-            }
+        if (hasWall && !spaceWalls.isEmpty()) {
+            spaceWallId = spaceWalls.get(0).getId();
         }
 
         List<MemberGroup> memberGroups = memberGroupRepository.findAllByAddSpaceId(addSpaceId);
