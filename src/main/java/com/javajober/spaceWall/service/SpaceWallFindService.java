@@ -188,5 +188,6 @@ public class SpaceWallFindService {
         ThemeSettingResponse themeSettingResponse = ThemeSettingResponse.from(styleSetting.getThemeSetting());
 
         return new StyleSettingResponse(styleSettingBlockId, backgroundSettingResponse, blockSettingResponse, themeSettingResponse);
+
     }
 }
