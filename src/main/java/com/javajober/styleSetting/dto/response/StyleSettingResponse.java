@@ -9,26 +9,21 @@ import lombok.Getter;
 @Getter
 public class StyleSettingResponse {
 
+    private Long styleSettingBlockId;
     private BackgroundSettingResponse backgroundSetting;
     private BlockSettingResponse blockSetting;
     private ThemeSettingResponse themeSetting;
 
-    public StyleSettingResponse() {}
+    public StyleSettingResponse() {
+        
+    }
 
     @Builder
-    public StyleSettingResponse(final BackgroundSettingResponse backgroundSetting, final BlockSettingResponse blockSetting, final ThemeSettingResponse themeSetting) {
+    public StyleSettingResponse(final Long styleSettingBlockId, final BackgroundSettingResponse backgroundSetting,
+                                final BlockSettingResponse blockSetting, final ThemeSettingResponse themeSetting) {
+        this.styleSettingBlockId = styleSettingBlockId;
         this.backgroundSetting = backgroundSetting;
         this.blockSetting = blockSetting;
         this.themeSetting = themeSetting;
-    }
-
-    public static StyleSettingResponse from(final BackgroundSettingResponse backgroundSettingResponse,
-                                            final BlockSettingResponse blockSettingResponse,
-                                            final ThemeSettingResponse themeSettingResponse) {
-        return StyleSettingResponse.builder()
-                .backgroundSetting(backgroundSettingResponse)
-                .blockSetting(blockSettingResponse)
-                .themeSetting(themeSettingResponse)
-                .build();
     }
 }
